@@ -7,6 +7,9 @@ import RecruitDetailModal from './components/RecruitDetailModal';
 import ChatPanel from './components/ChatPanel';
 import Toast from './components/Toast';
 
+// Base API URL: Supports Vercel environment variable (for separate deployments) or falls back to relative /api
+const API_BASE = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+
 export default function App() {
   const [currentRole, setCurrentRole] = useState('HR Manager');
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
@@ -45,8 +48,8 @@ export default function App() {
   const fetchDashboardData = async () => {
     try {
       const [empRes, metRes] = await Promise.all([
-        fetch('/api/employees'),
-        fetch('/api/metrics')
+        fetch(`${API_BASE}/api/employees`),
+        fetch(`${API_BASE}/api/metrics`)
       ]);
 
       if (empRes.ok && metRes.ok) {
@@ -80,7 +83,7 @@ export default function App() {
     setIsChatLoading(true);
 
     try {
-      const res = await fetch('/api/chat', {
+      const res = await fetch(`${API_BASE}/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -125,7 +128,7 @@ export default function App() {
     setIsConfirmingProposal(true);
 
     try {
-      const res = await fetch('/api/actions/confirm', {
+      const res = await fetch(`${API_BASE}/api/actions/confirm`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -187,7 +190,7 @@ export default function App() {
   const handleUpdateProcess = async (employeeId, table, fields) => {
     setIsUpdatingDetail(true);
     try {
-      const res = await fetch(`/api/employees/${employeeId}/process`, {
+      const res = await fetch(`${API_BASE}/api/employees/${employeeId}/process`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -217,7 +220,7 @@ export default function App() {
   const handleResetData = async () => {
     setIsResetting(true);
     try {
-      const res = await fetch('/api/reset-data', { method: 'POST' });
+      const res = await fetch(`${API_BASE}/api/reset-data`, { method: 'POST' });
       if (res.ok) {
         showToast('success', 'Demo Cohort Reset', 'Database successfully restored to clean initial recruit cohort.');
         await fetchDashboardData();
