@@ -1,0 +1,39 @@
+# Environment variables & API Keys (DO NOT COMMIT)
+.env
+.env.*
+*.env
+backend/.env
+frontend/.env
+*.key
+*.pem
+
+# Allow example files
+!.env.example
+!backend/.env.example
+!frontend/.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite3
+*.db
+backend/onboarding.db
+.venv/
+venv/
+ENV/
+env/
+
+# Node & Build Outputs
+node_modules/
+frontend/node_modules/
+dist/
+frontend/dist/
+.npm
+.eslintcache
+
+# IDE & System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
