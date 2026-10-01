@@ -1,7 +1,10 @@
 import datetime
 from sqlalchemy import Column, Integer, String, Boolean, Date, DateTime, ForeignKey, Text
 from sqlalchemy.orm import relationship
-from .database import Base
+try:
+    from .database import Base
+except ImportError:
+    from database import Base
 
 class Employee(Base):
     __tablename__ = "employees"

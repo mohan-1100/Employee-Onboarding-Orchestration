@@ -10,13 +10,22 @@ from sqlalchemy.orm import Session
 # Ensure environment variables are loaded
 load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
 
-from .models import Employee, HRCompliance, ITProvisioning, WorkplaceLogistics
-from .access_control import (
-    can_role_access_table, 
-    UNAUTHORIZED_MESSAGE, 
-    get_role_based_cascading_defaults
-)
-from .schemas import DiffProposal, ChatResponse
+try:
+    from .models import Employee, HRCompliance, ITProvisioning, WorkplaceLogistics
+    from .access_control import (
+        can_role_access_table, 
+        UNAUTHORIZED_MESSAGE, 
+        get_role_based_cascading_defaults
+    )
+    from .schemas import DiffProposal, ChatResponse
+except ImportError:
+    from models import Employee, HRCompliance, ITProvisioning, WorkplaceLogistics
+    from access_control import (
+        can_role_access_table, 
+        UNAUTHORIZED_MESSAGE, 
+        get_role_based_cascading_defaults
+    )
+    from schemas import DiffProposal, ChatResponse
 
 # Initialize OpenAI client targeting OpenRouter
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")

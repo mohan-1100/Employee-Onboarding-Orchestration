@@ -5,23 +5,42 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 
-from .database import engine, Base, SessionLocal, get_db, log_audit_silent, supabase_client
-from .models import Employee, HRCompliance, ITProvisioning, WorkplaceLogistics, AuditLog
-from .schemas import (
-    EmployeeDetailSchema, 
-    DashboardMetrics, 
-    ChatRequest, 
-    ChatResponse, 
-    ConfirmActionRequest, 
-    DirectProcessUpdateRequest
-)
-from .access_control import (
-    can_role_access_table, 
-    UNAUTHORIZED_MESSAGE, 
-    calculate_progress_metrics, 
-    get_role_based_cascading_defaults
-)
-from .agent import OnboardingOrchestratorAgent
+try:
+    from .database import engine, Base, SessionLocal, get_db, log_audit_silent, supabase_client
+    from .models import Employee, HRCompliance, ITProvisioning, WorkplaceLogistics, AuditLog
+    from .schemas import (
+        EmployeeDetailSchema, 
+        DashboardMetrics, 
+        ChatRequest, 
+        ChatResponse, 
+        ConfirmActionRequest, 
+        DirectProcessUpdateRequest
+    )
+    from .access_control import (
+        can_role_access_table, 
+        UNAUTHORIZED_MESSAGE, 
+        calculate_progress_metrics, 
+        get_role_based_cascading_defaults
+    )
+    from .agent import OnboardingOrchestratorAgent
+except ImportError:
+    from database import engine, Base, SessionLocal, get_db, log_audit_silent, supabase_client
+    from models import Employee, HRCompliance, ITProvisioning, WorkplaceLogistics, AuditLog
+    from schemas import (
+        EmployeeDetailSchema, 
+        DashboardMetrics, 
+        ChatRequest, 
+        ChatResponse, 
+        ConfirmActionRequest, 
+        DirectProcessUpdateRequest
+    )
+    from access_control import (
+        can_role_access_table, 
+        UNAUTHORIZED_MESSAGE, 
+        calculate_progress_metrics, 
+        get_role_based_cascading_defaults
+    )
+    from agent import OnboardingOrchestratorAgent
 
 # Initialize tables
 Base.metadata.create_all(bind=engine)
@@ -29,8 +48,19 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(
     title="Employee Onboarding Orchestrator API",
     description="Enterprise Onboarding Orchestrator with AI Governance and RBAC",
-    version="1.0.0"
+    version="1.0.0",
+    docs_url="/api/docs",
+    openapi_url="/api/openapi.json"
 )
+
+@app.get("/")
+@app.get("/api")
+def root_status():
+    return {
+        "status": "online",
+        "service": "Employee Onboarding Orchestrator Backend",
+        "version": "1.0.0"
+    }
 
 # Enable CORS for Vite frontend
 app.add_middleware(
